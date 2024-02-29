@@ -11,38 +11,38 @@
 #include <windows.h>
 #include <time.h>
 
-#define BUFSIZE 1024 //×î´ó±¨ÎÄ»º´æ´óĞ¡
-#define PORT 53   //53¶Ë¿ÚºÅ
-#define DEF_DNS_ADDRESS "223.5.5.5"	//ipconfig/all µÃÖªÍâ²¿·şÎñÆ÷dnsµØÖ·
-#define LOCAL_DNS_ADDRESS "127.0.0.1" //±¾µØDNS·şÎñÆ÷µØÖ·
-#define AMOUNT 1500//×î´óID×ª»»±í´óĞ¡
-#define NOTFOUND 32767 //Ã»ÓĞÕÒµ½
+#define BUFSIZE 1024 //æœ€å¤§æŠ¥æ–‡ç¼“å­˜å¤§å°
+#define PORT 53   //53ç«¯å£å·
+#define DEF_DNS_ADDRESS "223.5.5.5"	//ipconfig/all å¾—çŸ¥å¤–éƒ¨æœåŠ¡å™¨dnsåœ°å€
+#define LOCAL_DNS_ADDRESS "127.0.0.1" //æœ¬åœ°DNSæœåŠ¡å™¨åœ°å€
+#define AMOUNT 1500//æœ€å¤§IDè½¬æ¢è¡¨å¤§å°
+#define NOTFOUND 32767 //æ²¡æœ‰æ‰¾åˆ°
 #define LENGTHOFURL 64 //0~63
 
-//DNS±¨ÎÄÊ×²¿ 12×Ö½Ú
+//DNSæŠ¥æ–‡é¦–éƒ¨ 12å­—èŠ‚
 typedef struct DNSHeader
 {
-	unsigned short ID; //±êÖ¾
-	unsigned short Flags; //±êÊ¶
-	unsigned short QuestionNum;  //ÎÊÌâÊı
-	unsigned short AnswerNum; //×ÊÔ´¼ÇÂ¼Êı
-	unsigned short AuthorNum; //ÊÚÈ¨×ÊÔ´¼ÇÂ¼Êı
-	unsigned short AdditionNum; //¶îÍâ×ÊÔ´¼ÇÂ¼Êı
+	unsigned short ID; //æ ‡å¿—
+	unsigned short Flags; //æ ‡è¯†
+	unsigned short QuestionNum;  //é—®é¢˜æ•°
+	unsigned short AnswerNum; //èµ„æºè®°å½•æ•°
+	unsigned short AuthorNum; //æˆæƒèµ„æºè®°å½•æ•°
+	unsigned short AdditionNum; //é¢å¤–èµ„æºè®°å½•æ•°
 } DNSHDR, * pDNSHDR;
 
-//DNSÓòÃû½âÎö±í½á¹¹
+//DNSåŸŸåè§£æè¡¨ç»“æ„
 typedef struct translate
 {
-	char * IP;						//IPµØÖ·
-	char * domain;					//ÓòÃû
+	char * IP;						//IPåœ°å€
+	char * domain;					//åŸŸå
 } Translate;
 
-//ID×ª»»±í½á¹¹
+//IDè½¬æ¢è¡¨ç»“æ„
 typedef struct IDChange
 {
-	unsigned short oldID;			//Ô­ÓĞID
-	BOOL done;						//±ê¼ÇÊÇ·ñÍê³É½âÎö
-	SOCKADDR_IN client;				//ÇëÇóÕßÌ×½Ó×ÖµØÖ·
+	unsigned short oldID;			//åŸæœ‰ID
+	BOOL done;						//æ ‡è®°æ˜¯å¦å®Œæˆè§£æ
+	SOCKADDR_IN client;				//è¯·æ±‚è€…å¥—æ¥å­—åœ°å€
 } IDTransform;
 
 

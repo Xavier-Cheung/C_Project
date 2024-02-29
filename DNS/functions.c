@@ -11,21 +11,21 @@
 #include <process.h>
 #include "definition.h"
 
-#pragma  comment(lib, "Ws2_32.lib") //¼ÓÔØ ws2_32.dll
+#pragma  comment(lib, "Ws2_32.lib") //åŠ è½½ ws2_32.dll
 
-extern Translate DNSTable[AMOUNT];		//DNSÓòÃû½âÎö±í
-extern IDTransform IDTransTable[AMOUNT];	//ID×ª»»±í
-extern int IDcount;					//×ª»»±íÖĞµÄÌõÄ¿¸öÊı
-extern char Url[LENGTHOFURL];					//ÓòÃû
-extern SYSTEMTIME TimeOfSys;                     //ÏµÍ³Ê±¼ä
-extern int Day, Hour, Minute, Second, Milliseconds;//±£´æÏµÍ³Ê±¼äµÄ±äÁ¿
+extern Translate DNSTable[AMOUNT];		//DNSåŸŸåè§£æè¡¨
+extern IDTransform IDTransTable[AMOUNT];	//IDè½¬æ¢è¡¨
+extern int IDcount;					//è½¬æ¢è¡¨ä¸­çš„æ¡ç›®ä¸ªæ•°
+extern char Url[LENGTHOFURL];					//åŸŸå
+extern SYSTEMTIME TimeOfSys;                     //ç³»ç»Ÿæ—¶é—´
+extern int Day, Hour, Minute, Second, Milliseconds;//ä¿å­˜ç³»ç»Ÿæ—¶é—´çš„å˜é‡
 
-//¼ÓÔØ±¾µØtxtÎÄ¼ş
+//åŠ è½½æœ¬åœ°txtæ–‡ä»¶
 int InitialDNSTable(char* path)
 {
 	int i = 0, j = 0;
 	int num = 0;
-	char* Temp[AMOUNT];//charĞÍÖ¸Õë1500Êı×é
+	char* Temp[AMOUNT];//charå‹æŒ‡é’ˆ1500æ•°ç»„
 	FILE* fp = fopen(path, "ab+");
 	if (!fp)
 	{
@@ -33,17 +33,17 @@ int InitialDNSTable(char* path)
 		exit(-1);
 	}
 	char* reac;
-	while (i < AMOUNT - 1)//ÊµÏÖ°ÑÃ¿Ò»ĞĞ·Ö¿ªµÄ²Ù×÷
+	while (i < AMOUNT - 1)//å®ç°æŠŠæ¯ä¸€è¡Œåˆ†å¼€çš„æ“ä½œ
 	{
 		Temp[i] = (char*)malloc(sizeof(char)*200);
 		//Temp[200];
 		//fscanf(fp, "%*c%*[^\n]", IPTemp[i]);
-		if (fgets(Temp[i],1000,fp)== NULL)//Èç¹û´íÎó»òÕß¶Áµ½½áÊø·û£¬¾Í·µ»ØNULL£»
+		if (fgets(Temp[i],1000,fp)== NULL)//å¦‚æœé”™è¯¯æˆ–è€…è¯»åˆ°ç»“æŸç¬¦ï¼Œå°±è¿”å›NULLï¼›
 			break;
 		else
 		{
-			//reac = strchr(Temp[i], '\n');          //²éÕÒ»»ĞĞ·û
-			//if (reac)                            //Èç¹ûfind²»Îª¿ÕÖ¸Õë
+			//reac = strchr(Temp[i], '\n');          //æŸ¥æ‰¾æ¢è¡Œç¬¦
+			//if (reac)                            //å¦‚æœfindä¸ä¸ºç©ºæŒ‡é’ˆ
 			//	*reac = '\0';
 			;//printf("%s", Temp[i]);
 		}
@@ -53,7 +53,7 @@ int InitialDNSTable(char* path)
 		printf("The DNS record memory is full.\n");
 
 
-	for (j; j < i; j++)//ÓÃÀ´°Ñ¸Õ·ÖºÃµÄTEMP¡¾i¡¿ÔÙ´ÎÇĞ¸î³ÉIPºÍdomain
+	for (j; j < i; j++)//ç”¨æ¥æŠŠåˆšåˆ†å¥½çš„TEMPã€iã€‘å†æ¬¡åˆ‡å‰²æˆIPå’Œdomain
 	{
 		char* ex1 = strtok(Temp[j], " ");
 		char* ex2 = strtok(NULL, " ");
@@ -82,18 +82,18 @@ int InitialDNSTable(char* path)
 	return num;
 }
 
-//»ñÈ¡DNSÇëÇóÖĞµÄÓòÃû
+//è·å–DNSè¯·æ±‚ä¸­çš„åŸŸå
 void GetUrl(char* recvbuf, int recvnum)
 {
 	char urlname[LENGTHOFURL];
 	int i = 0, j, k = 0;
 
-	memset(Url, 0, LENGTHOFURL); //È«ÓÃ0³õÊ¼»¯
-	memcpy(urlname, &(recvbuf[sizeof(DNSHDR)]), recvnum - 12);	//»ñÈ¡ÇëÇó±¨ÎÄÖĞµÄÓòÃû±íÊ¾£¬ÒªÈ¥µôDNS±¨ÎÄÊ×²¿µÄ12×Ö½Ú
+	memset(Url, 0, LENGTHOFURL); //å…¨ç”¨0åˆå§‹åŒ–
+	memcpy(urlname, &(recvbuf[sizeof(DNSHDR)]), recvnum - 12);	//è·å–è¯·æ±‚æŠ¥æ–‡ä¸­çš„åŸŸåè¡¨ç¤ºï¼Œè¦å»æ‰DNSæŠ¥æ–‡é¦–éƒ¨çš„12å­—èŠ‚
 
 	int len = strlen(urlname);
 
-	//ÓòÃû×ª»»
+	//åŸŸåè½¬æ¢
 	while (i < len)
 	{
 		if (urlname[i] > 0 && urlname[i] <= 63)
@@ -110,7 +110,7 @@ void GetUrl(char* recvbuf, int recvnum)
 	Url[k] = '\0';
 }
 
-//ÅĞ¶ÏÄÜ²»ÄÜÔÚ±¾ÖĞÕÒµ½DNSÇëÇóÖĞµÄÓòÃû£¬ÕÒµ½·µ»ØÏÂ±ê
+//åˆ¤æ–­èƒ½ä¸èƒ½åœ¨æœ¬ä¸­æ‰¾åˆ°DNSè¯·æ±‚ä¸­çš„åŸŸåï¼Œæ‰¾åˆ°è¿”å›ä¸‹æ ‡
 int IsFind(char* url, int num)
 {
 	int find = NOTFOUND;
@@ -148,25 +148,25 @@ int IsFind(char* url, int num)
 	return find;
 }
 
-//½«ÇëÇóID×ª»»ÎªĞÂµÄID£¬²¢½«ĞÅÏ¢Ğ´ÈëID×ª»»±íÖĞ
+//å°†è¯·æ±‚IDè½¬æ¢ä¸ºæ–°çš„IDï¼Œå¹¶å°†ä¿¡æ¯å†™å…¥IDè½¬æ¢è¡¨ä¸­
 unsigned short ReplaceNewID(unsigned short OldID, SOCKADDR_IN temp, BOOL ifdone)
 {
-	srand(time(NULL)); //Ëæ»úÊıÖÖ×Ó
+	srand(time(NULL)); //éšæœºæ•°ç§å­
 	IDTransTable[IDcount].oldID = OldID;
 	IDTransTable[IDcount].client = temp;
 	IDTransTable[IDcount].done = ifdone;
-	IDcount++; //ID×ª»»±íÊıÄ¿Òª¸üĞÂ~
+	IDcount++; //IDè½¬æ¢è¡¨æ•°ç›®è¦æ›´æ–°~
 
-	return (unsigned short)(IDcount - 1);	//ÒÔ±íÖĞÏÂ±ê×÷ÎªĞÂµÄID
+	return (unsigned short)(IDcount - 1);	//ä»¥è¡¨ä¸­ä¸‹æ ‡ä½œä¸ºæ–°çš„ID
 }
 
-//´òÓ¡ Ê±¼ä newID ¹¦ÄÜ ÓòÃû IP
+//æ‰“å° æ—¶é—´ newID åŠŸèƒ½ åŸŸå IP
 void PrintInfo(unsigned short newID, int find)
 {
-	//´òÓ¡Ê±¼ä
+	//æ‰“å°æ—¶é—´
 	GetLocalTime(&TimeOfSys);
-	//Êä³öÖ¸¶¨³¤¶ÈµÄ×Ö·û´®, ³¬³¤Ê±²»½Ø¶Ï, ²»×ãÊ±×ó¶ÔÆë:
-	//printf("%-ns", str);            --n ÎªÖ¸¶¨³¤¶ÈµÄ10½øÖÆÊıÖµ
+	//è¾“å‡ºæŒ‡å®šé•¿åº¦çš„å­—ç¬¦ä¸², è¶…é•¿æ—¶ä¸æˆªæ–­, ä¸è¶³æ—¶å·¦å¯¹é½:
+	//printf("%-ns", str);            --n ä¸ºæŒ‡å®šé•¿åº¦çš„10è¿›åˆ¶æ•°å€¼
 	int Btime;
 	int Ltime;
 	Btime = ((((TimeOfSys.wDay - Day) * 24 + TimeOfSys.wHour - Hour) * 60 + TimeOfSys.wMinute - Minute) * 60) + TimeOfSys.wSecond - Second;
@@ -174,45 +174,45 @@ void PrintInfo(unsigned short newID, int find)
 	printf("%d.%d   %d", Btime, Ltime, newID);
 	printf("    ");
 
-	//ÔÚ±íÖĞÃ»ÓĞÕÒµ½DNSÇëÇóÖĞµÄÓòÃû
+	//åœ¨è¡¨ä¸­æ²¡æœ‰æ‰¾åˆ°DNSè¯·æ±‚ä¸­çš„åŸŸå
 	if (find == NOTFOUND)
 	{
-		//ÖĞ¼Ì¹¦ÄÜ
-		printf("ÖĞ¼Ì");
+		//ä¸­ç»§åŠŸèƒ½
+		printf("ä¸­ç»§");
 		printf("    ");
-		//´òÓ¡ÓòÃû
+		//æ‰“å°åŸŸå
 		printf("%s",Url);
 		printf("    ");
-		//´òÓ¡IP
+		//æ‰“å°IP
 		printf("\n");
 	}
 
-	//ÔÚ±íÖĞÕÒµ½DNSÇëÇóÖĞµÄÓòÃû
+	//åœ¨è¡¨ä¸­æ‰¾åˆ°DNSè¯·æ±‚ä¸­çš„åŸŸå
 	else
 	{
-		if (strcmp(DNSTable[find].IP, "0.0.0.0") == 0)  //²»Á¼ÍøÕ¾À¹½Ø
+		if (strcmp(DNSTable[find].IP, "0.0.0.0") == 0)  //ä¸è‰¯ç½‘ç«™æ‹¦æˆª
 		{
-			//ÆÁ±Î¹¦ÄÜ
-			printf("ÆÁ±Î");
+			//å±è”½åŠŸèƒ½
+			printf("å±è”½");
 			printf("    ");
-			//´òÓ¡ÓòÃû(¼Ó*)
-			//´òÓ¡ÓòÃû
+			//æ‰“å°åŸŸå(åŠ *)
+			//æ‰“å°åŸŸå
 			printf("***%s", Url);
 			printf("    ");
-			//´òÓ¡IP
+			//æ‰“å°IP
 			printf("%s\n", DNSTable[find].IP);
 		}
 
-		//¼ìË÷½á¹ûÎªÆÕÍ¨IPµØÖ·£¬ÔòÏò¿Í»§·µ»ØÕâ¸öµØÖ·
+		//æ£€ç´¢ç»“æœä¸ºæ™®é€šIPåœ°å€ï¼Œåˆ™å‘å®¢æˆ·è¿”å›è¿™ä¸ªåœ°å€
 		else
 		{
-			//·şÎñÆ÷¹¦ÄÜ
-			printf("Local·şÎñÆ÷");
+			//æœåŠ¡å™¨åŠŸèƒ½
+			printf("LocalæœåŠ¡å™¨");
 			printf("    ");
-			//´òÓ¡ÓòÃû
+			//æ‰“å°åŸŸå
 			printf("***%s", Url);
 			printf("    ");
-			//´òÓ¡IP
+			//æ‰“å°IP
 			printf("%s\n", DNSTable[find].IP);
 		}
 	}
